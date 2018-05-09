@@ -21,9 +21,8 @@ def combineInput():
       crackedPasswords[splitLine[0]] = splitLine[1].rstrip()
 
   for user in userHashes:
-    for passwordHash in crackedPasswords:
-      if userHashes[user] == passwordHash:
-        print user, ":", crackedPasswords[passwordHash]
+    value = crackedPasswords.get(userHashes[user], "")
+    print user, ":", value
 
 #MAIN
 if len(sys.argv) != 3:
