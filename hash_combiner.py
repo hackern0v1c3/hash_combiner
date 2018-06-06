@@ -12,13 +12,18 @@ def combineInput():
 
   with open(sys.argv[1], 'r') as f:
     for line in f:
-      splitLine = line.split(":")
-      userHashes[splitLine[0]] = splitLine[1].rstrip()
-
+      try:
+        splitLine = line.split(":")
+        userHashes[splitLine[0]] = splitLine[1].rstrip()
+      except:
+        pass
   with open(sys.argv[2], 'r') as f:
     for line in f:
-      splitLine = line.split(":")
-      crackedPasswords[splitLine[0]] = splitLine[1].rstrip()
+      try:
+        splitLine = line.split(":")
+        crackedPasswords[splitLine[0]] = splitLine[1].rstrip()
+      except:
+        pass
 
   for user in userHashes:
     value = crackedPasswords.get(userHashes[user], "")
