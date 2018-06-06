@@ -1,23 +1,28 @@
 #!/usr/bin/python
 import os
 import sys
+import argparse
 
-def print_usage():
-	print "USAGE: "+sys.argv[0]+" {path to file containing Username:Hash} {path to file containing Hash:Password}"
-	print "Example: "+sys.argv[0]+" users_with_hashes.txt cracked_hashes.txt"
+parser = argparse.ArgumentParser()
+
+parser.add_argument("user_hash", help="File containing username:hash combos")
+parser.add_argument("hash_password", help="File containing hash:password combos")
+parser.add_argument("-sb", "--show_blank", help="Add as option if you want to display users who do not have a hash in the hash:password file (uncracked passwords)", action="store_true")
+
+args = parser.parse_args()
 
 def combineInput():
   userHashes = {}
   crackedPasswords = {}
 
-  with open(sys.argv[1], 'r') as f:
+  with open(args.user_hash, 'r') as f:
     for line in f:
       try:
         splitLine = line.split(":")
         userHashes[splitLine[0]] = splitLine[1].rstrip()
       except:
         pass
-  with open(sys.argv[2], 'r') as f:
+  with open(args.hash_password, 'r') as f:
     for line in f:
       try:
         splitLine = line.split(":")
@@ -27,14 +32,13 @@ def combineInput():
 
   for user in userHashes:
     value = crackedPasswords.get(userHashes[user], "")
-    print user, ":", value
+    if not value:
+      if args.show_blank:
+        print user, ":"
+      else:
+        pass
+    else:
+      print user, ":", value
 
 #MAIN
-if len(sys.argv) != 3:
-	print_usage()
-	sys.exit()
-
-if os.path.isfile(sys.argv[1]) and os.path.isfile(sys.argv[2]):
-	combineInput()
-else:
-	print "Invalid file"
+combineInput()
